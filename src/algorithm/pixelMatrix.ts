@@ -28,7 +28,7 @@ const perceivedLuminance = {
 	[Channels.Blue]: 0.114,
 } as const
 
-type ImageLuminanceOptions = {
+export type ImageLuminanceOptions = {
 	img: ImageSource | null
 	resolutionX: number
 	aspectRatio: AspectRatio
@@ -42,7 +42,7 @@ export const getMutableImageLuminanceValues = ({
 	if (!img) {
 		return {
 			pixelMatrix: [],
-			allPixels: [],
+			flatPixels: [],
 		}
 	}
 
@@ -73,13 +73,7 @@ export const getMutableImageLuminanceValues = ({
 
 	let curPix = 0
 
-	// two-dimensional matrix form, for output
 	const pixelMatrix: { val: number }[][] = []
-
-	// one-dimensional form, for ease of sorting and iterating.
-	// changing individual pixels within this also
-	// mutates `pixelMatrix`
-	const allPixels: { val: number }[] = []
 
 	let max = -Infinity
 	let min = Infinity
@@ -94,7 +88,7 @@ export const getMutableImageLuminanceValues = ({
 			// append pixel and reset during alpha channel
 
 			// we set `ch` later, on second pass
-			const thisPix = { val: curPix }
+			const thisPix = { val: curPix, ch: '' }
 
 			max = Math.max(max, curPix)
 			min = Math.min(min, curPix)
@@ -106,22 +100,25 @@ export const getMutableImageLuminanceValues = ({
 				pixelMatrix[pixelMatrix.length - 1].push(thisPix)
 			}
 
-			allPixels.push(thisPix)
-
 			curPix = 0
 		}
 	}
 
-	for (const pix of allPixels) {
+	// one-dimensional form, for ease of sorting and iterating.
+	// changing individual pixels within this also
+	// mutates `pixelMatrix`
+	const flatPixels = pixelMatrix.flat()
+
+	for (const pix of flatPixels) {
 		pix.val = (pix.val - min) / (max - min)
 	}
 
 	// sorting allows us to iterate over the pixels
 	// and charVals simultaneously, in linear time
-	allPixels.sort((a, b) => a.val - b.val)
+	flatPixels.sort((a, b) => a.val - b.val)
 
 	return {
 		pixelMatrix,
-		allPixels,
+		flatPixels,
 	}
 }

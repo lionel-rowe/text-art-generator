@@ -43,7 +43,12 @@ export const ImageUpload: FC<
 				<label htmlFor='file' title='Upload an image'>
 					<div>
 						<div className='label'>Image file</div>
-						<button className='btn' type='button'>
+						<button
+							className='btn'
+							type='button'
+							// captures click-like keyboard events (space, enter, etc.)
+							onClick={() => fileUploadInputRef.current?.click()}
+						>
 							Upload
 						</button>
 						<input
@@ -51,6 +56,7 @@ export const ImageUpload: FC<
 							id='file'
 							type='file'
 							onChange={handleFileUpload}
+							tabIndex={-1}
 						/>
 						<span className='file-name'>{fileName}</span>
 					</div>

@@ -1,27 +1,41 @@
 import { CharVal } from './charVals'
 import { polynomial, exponential } from '../utils/math'
-import { PixelMatrix, Pixel } from './pixelMatrix'
+import {
+	getMutableImageLuminanceValues,
+	ImageLuminanceOptions,
+} from './pixelMatrix'
 
 export type CharPixelMatrix = CharVal[][]
 
 export type CharPixelMatrixOptions = {
 	charVals: CharVal[]
-	pixelMatrix: PixelMatrix
-	allPixels: Pixel[]
 	brightness: number
 	contrast: number
-}
+} & ImageLuminanceOptions
 
-export const getCharPixelMatrixWithMutation = ({
+let cachedLuminanceInfo = {} as ImageLuminanceOptions &
+	ReturnType<typeof getMutableImageLuminanceValues>
+
+export const getCharPixelMatrix = ({
 	brightness,
 	contrast,
 	charVals,
-	...options
+	...imageLuminanceOptions
 }: CharPixelMatrixOptions): CharPixelMatrix => {
 	if (!charVals.length) return []
 
-	const charPixelMatrix = options.pixelMatrix as CharVal[][]
-	const allCharPixels = options.allPixels as CharVal[]
+	const luminanceInfo = Object.entries(imageLuminanceOptions).every(
+		([key, val]) =>
+			cachedLuminanceInfo[key as keyof typeof imageLuminanceOptions] ===
+			val,
+	)
+		? cachedLuminanceInfo
+		: getMutableImageLuminanceValues(imageLuminanceOptions)
+
+	cachedLuminanceInfo = { ...imageLuminanceOptions, ...luminanceInfo }
+
+	const charPixelMatrix = luminanceInfo.pixelMatrix as CharVal[][]
+	const allCharPixels = luminanceInfo.flatPixels as CharVal[]
 
 	const multiplier = exponential(brightness)
 	const polynomialFn = polynomial(exponential(contrast))

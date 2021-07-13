@@ -6,7 +6,7 @@ export const useRenderToken = () => {
 	return useMemo(
 		() => ({
 			value,
-			increment: () => setValue((v) => v + 1),
+			rerender: () => setValue((v) => v + 1),
 		}),
 		[value],
 	)

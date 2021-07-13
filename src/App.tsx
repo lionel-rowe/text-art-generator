@@ -12,9 +12,8 @@ import {
 	getViableCharSet,
 	RawCharValData,
 } from './algorithm/charVals'
-import { getMutableImageLuminanceValues } from './algorithm/pixelMatrix'
 import {
-	getCharPixelMatrixWithMutation,
+	getCharPixelMatrix,
 	CharPixelMatrix,
 } from './algorithm/charPixelMatrix'
 import { getTextArt } from './algorithm/textArt'
@@ -30,8 +29,9 @@ import { TextArt } from './components/TextArt'
 import { NumberInput } from './components/NumberInput'
 import { useRenderToken } from './hooks/useRenderToken'
 import { useComplexState } from './hooks/useComplexState'
-import { useThrottle } from '@react-hook/throttle'
-import { nextAnimationFrame } from './utils/promisify'
+import { useResponsiveThrottle } from './hooks/useResponsiveThrottle'
+import { AspectRatio } from './types/types'
+import { useRefGetter } from './hooks/useRefGetter'
 
 export type Status = 'loading' | 'error' | 'loaded'
 
@@ -81,16 +81,20 @@ export const App = () => {
 
 	const viableCharSet = useMemo(() => getViableCharSet(alphabet), [alphabet])
 
-	const { aspectRatio } = useMemo(
-		() => getAlphabetScalingData(viableCharSet),
-		[viableCharSet],
+	const aspectRatio = useRefGetter<AspectRatio>(
+		() =>
+			status === 'loaded'
+				? getAlphabetScalingData(viableCharSet).aspectRatio
+				: [1, 1],
+		[status, viableCharSet],
 	)
 
-	const [rawCharValData, setRawCharValData] = useThrottle<RawCharValData>(
-		() => ({ charVals: [], min: 0, max: 0 }),
-		10 /* fps */,
-		true /*leading */,
-	)
+	const [rawCharValData, setRawCharValData] =
+		useResponsiveThrottle<RawCharValData>({
+			charVals: [],
+			min: 0,
+			max: 0,
+		})
 
 	useEffect(() => {
 		if (status !== 'loaded') return
@@ -126,57 +130,35 @@ export const App = () => {
 		loadImage(src).then(setImg)
 	}, [src])
 
-	const mutableImageLuminanceValues = useMemo(() => {
-		return getMutableImageLuminanceValues({
-			resolutionX,
-			aspectRatio,
-			img,
-		})
-	}, [resolutionX, aspectRatio, img])
+	const [charPixelMatrix, setCharPixelMatrix] =
+		useResponsiveThrottle<CharPixelMatrix>([])
 
-	const [charPixelMatrix, setCharPixelMatrix] = useThrottle<CharPixelMatrix>(
-		() => [],
-		10 /* fps */,
-		true /*leading */,
-	)
+	useEffect(() => {
+		if (status !== 'loaded' || !img) return
 
-	useLayoutEffect(() => {
-		if (status !== 'loaded') return
+		setCharPixelMatrix(() => {
+			// only after throttled callback to prevent jank
+			setDarkMode(invert)
 
-		let canceled = false
-
-		const { allPixels, pixelMatrix } = mutableImageLuminanceValues
-
-		// remove jank
-		nextAnimationFrame().then(() => {
-			if (canceled) return
-
-			setCharPixelMatrix(() => {
-				const v = getCharPixelMatrixWithMutation({
-					pixelMatrix,
-					allPixels,
-					brightness,
-					contrast,
-					charVals,
-				})
-
-				setDarkMode(invert)
-
-				return v
+			return getCharPixelMatrix({
+				resolutionX,
+				img,
+				aspectRatio: aspectRatio.current,
+				brightness,
+				contrast,
+				charVals,
 			})
 		})
-
-		return () => {
-			canceled = true
-		}
 	}, [
 		status,
 		invert,
 		brightness,
 		contrast,
 		charVals,
-		mutableImageLuminanceValues,
 		setCharPixelMatrix,
+		aspectRatio,
+		resolutionX,
+		img,
 	])
 
 	useLayoutEffect(
@@ -192,12 +174,14 @@ export const App = () => {
 		if (!confirmed) return
 
 		// reduce jank
-		setTextArt('')
+		setStatus('loading')
 
 		setSrc(defaultSrc)
 		setConfig(defaultConfig)
 
-		renderToken.increment()
+		renderToken.rerender()
+
+		setStatus('loaded')
 	}, [setConfig, renderToken])
 
 	return status === 'loading' ? (

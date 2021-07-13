@@ -1,0 +1,7 @@
+{
+	"short_name": "Text Art Generator",
+	"name": "Text Art Generator",
+	"icons": [],
+	"start_url": "https://lionel-rowe.github.io/text-art-generator",
+	"display": "standalone"
+}
