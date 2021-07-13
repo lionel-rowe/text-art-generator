@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/text-art-generator/static/css/main.260f01b7.chunk.css",
-    "main.js": "/text-art-generator/static/js/main.4fb4a22d.chunk.js",
-    "main.js.map": "/text-art-generator/static/js/main.4fb4a22d.chunk.js.map",
+    "main.js": "/text-art-generator/static/js/main.18469fdf.chunk.js",
+    "main.js.map": "/text-art-generator/static/js/main.18469fdf.chunk.js.map",
     "runtime-main.js": "/text-art-generator/static/js/runtime-main.5f54d8ab.js",
     "runtime-main.js.map": "/text-art-generator/static/js/runtime-main.5f54d8ab.js.map",
-    "static/js/2.a841a37f.chunk.js": "/text-art-generator/static/js/2.a841a37f.chunk.js",
-    "static/js/2.a841a37f.chunk.js.map": "/text-art-generator/static/js/2.a841a37f.chunk.js.map",
+    "static/js/2.6d641b94.chunk.js": "/text-art-generator/static/js/2.6d641b94.chunk.js",
+    "static/js/2.6d641b94.chunk.js.map": "/text-art-generator/static/js/2.6d641b94.chunk.js.map",
     "index.html": "/text-art-generator/index.html",
     "static/css/main.260f01b7.chunk.css.map": "/text-art-generator/static/css/main.260f01b7.chunk.css.map",
-    "static/js/2.a841a37f.chunk.js.LICENSE.txt": "/text-art-generator/static/js/2.a841a37f.chunk.js.LICENSE.txt"
+    "static/js/2.6d641b94.chunk.js.LICENSE.txt": "/text-art-generator/static/js/2.6d641b94.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.5f54d8ab.js",
-    "static/js/2.a841a37f.chunk.js",
+    "static/js/2.6d641b94.chunk.js",
     "static/css/main.260f01b7.chunk.css",
-    "static/js/main.4fb4a22d.chunk.js"
+    "static/js/main.18469fdf.chunk.js"
   ]
 }
