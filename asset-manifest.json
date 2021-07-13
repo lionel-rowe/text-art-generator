@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/text-art-generator/static/css/main.3a35f62a.chunk.css",
-    "main.js": "/text-art-generator/static/js/main.6c6cda18.chunk.js",
-    "main.js.map": "/text-art-generator/static/js/main.6c6cda18.chunk.js.map",
+    "main.js": "/text-art-generator/static/js/main.73d11221.chunk.js",
+    "main.js.map": "/text-art-generator/static/js/main.73d11221.chunk.js.map",
     "runtime-main.js": "/text-art-generator/static/js/runtime-main.5f54d8ab.js",
     "runtime-main.js.map": "/text-art-generator/static/js/runtime-main.5f54d8ab.js.map",
     "static/js/2.df9b2f69.chunk.js": "/text-art-generator/static/js/2.df9b2f69.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.5f54d8ab.js",
     "static/js/2.df9b2f69.chunk.js",
     "static/css/main.3a35f62a.chunk.css",
-    "static/js/main.6c6cda18.chunk.js"
+    "static/js/main.73d11221.chunk.js"
   ]
 }
