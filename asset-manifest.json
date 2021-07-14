@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/text-art-generator/static/css/main.3a35f62a.chunk.css",
+    "main.css": "/text-art-generator/static/css/main.bf1a2101.chunk.css",
     "main.js": "/text-art-generator/static/js/main.0ca0ed79.chunk.js",
     "main.js.map": "/text-art-generator/static/js/main.0ca0ed79.chunk.js.map",
     "runtime-main.js": "/text-art-generator/static/js/runtime-main.5f54d8ab.js",
@@ -8,13 +8,13 @@
     "static/js/2.4f699028.chunk.js": "/text-art-generator/static/js/2.4f699028.chunk.js",
     "static/js/2.4f699028.chunk.js.map": "/text-art-generator/static/js/2.4f699028.chunk.js.map",
     "index.html": "/text-art-generator/index.html",
-    "static/css/main.3a35f62a.chunk.css.map": "/text-art-generator/static/css/main.3a35f62a.chunk.css.map",
+    "static/css/main.bf1a2101.chunk.css.map": "/text-art-generator/static/css/main.bf1a2101.chunk.css.map",
     "static/js/2.4f699028.chunk.js.LICENSE.txt": "/text-art-generator/static/js/2.4f699028.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.5f54d8ab.js",
     "static/js/2.4f699028.chunk.js",
-    "static/css/main.3a35f62a.chunk.css",
+    "static/css/main.bf1a2101.chunk.css",
     "static/js/main.0ca0ed79.chunk.js"
   ]
 }
