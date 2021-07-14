@@ -7,7 +7,7 @@ import {
 	useRef,
 	useState,
 } from 'react'
-import { cssVars, appendInvisible } from '../ui/browser'
+import { pixelValues, appendInvisible } from '../ui/browser'
 import { Point } from '../types/types'
 import { getScreenDimensions, getScreenWidth, isMobile } from '../ui/browser'
 
@@ -66,7 +66,7 @@ export const TextArt: FC<{
 			return
 		}
 
-		const { margin, sidebar, sidebarMarginRight } = cssVars
+		const { margin, sidebar, sidebarMarginRight } = pixelValues
 
 		const screenWidth = getScreenWidth()
 		const negativeSpace =

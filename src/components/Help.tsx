@@ -1,6 +1,6 @@
 import { FC, useState, useCallback } from 'react'
 import { getScreenWidth } from '../ui/browser'
-import { cssVars } from '../ui/browser'
+import { pixelValues } from '../ui/browser'
 
 const Tooltip: FC<{
 	content: string
@@ -13,7 +13,7 @@ const Tooltip: FC<{
 				Math.min(
 					getScreenWidth() -
 						el.getBoundingClientRect().x -
-						cssVars.margin,
+						pixelValues.margin,
 					400,
 				),
 			)

@@ -5,4 +5,4 @@ export const polynomial = (degree: number) => (x: number) =>
 
 // converts numbers in range 0..100 into numbers in range 0.1..10
 // to be suitable for usage as brightness/contrast values
-export const exponential = (n: number) => 10 ** (n / 50 - 1)
+export const exponential = (n: number) => Math.pow(10, n / 50 - 1)

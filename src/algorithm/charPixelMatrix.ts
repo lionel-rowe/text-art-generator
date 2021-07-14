@@ -35,29 +35,28 @@ export const getCharPixelMatrix = ({
 	cachedLuminanceInfo = { ...imageLuminanceOptions, ...luminanceInfo }
 
 	const charPixelMatrix = luminanceInfo.pixelMatrix as CharVal[][]
-	const allCharPixels = luminanceInfo.flatPixels as CharVal[]
+	const flatCharPixels = luminanceInfo.flatPixels as CharVal[]
 
 	const multiplier = exponential(brightness)
 	const polynomialFn = polynomial(exponential(contrast))
 
 	let charValIdx = 0
-	let charVal = charVals[charValIdx]
+	let charVal: CharVal
 
-	for (const pix of allCharPixels) {
+	for (const charPix of flatCharPixels) {
 		while (charValIdx < charVals.length) {
 			charVal = charVals[charValIdx]
 
-			if (polynomialFn(pix.val) * multiplier <= charVal.val) {
-				pix.ch = charVal.ch
-				break
-			} else {
+			if (polynomialFn(charPix.val) * multiplier > charVal.val) {
 				++charValIdx
+
+				continue
+			} else {
+				break
 			}
 		}
 
-		// if none matched so far, we simply use the
-		// last (lightest) character
-		pix.ch = charVal?.ch || ' '
+		charPix.ch = charVal!.ch
 	}
 
 	// cloning the array updates the reference to let React know it needs to re-render,

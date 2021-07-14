@@ -1,4 +1,4 @@
-import { CharSet } from './charDensity'
+import { CharSet } from './charSet'
 import { appendInvisible } from '../ui/browser'
 import { AspectRatio } from '../types/types'
 

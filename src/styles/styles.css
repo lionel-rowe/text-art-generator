@@ -90,7 +90,7 @@ button {
 	flex: 0 0 var(--controls);
 }
 
-.form-row input {
+.form-row input[type='number'] {
 	margin-right: 20px;
 }
 

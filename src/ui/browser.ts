@@ -1,12 +1,18 @@
 import { Dimensions } from '../types/types'
-import { kebabize } from '../utils/formatters'
+import { camelToKebab, KebabToCamel } from '../utils/formatters'
 
-type CssVar = 'margin' | 'controls' | 'sidebar' | 'sidebarMarginRight'
+type CssVar = 'margin' | 'controls' | 'sidebar' | 'sidebar-margin-right'
+type CssVarCamel = KebabToCamel<CssVar>
 
-export const cssVars = new Proxy(document.documentElement, {
-	get: (o, k: CssVar) =>
-		parseFloat(getComputedStyle(o).getPropertyValue(`--${kebabize(k)}`)),
-}) as any as Record<CssVar, number>
+export const pixelValues = new Proxy(document.documentElement, {
+	get: (o, k: CssVarCamel) =>
+		parseFloat(
+			getComputedStyle(o).getPropertyValue(`--${camelToKebab(k)}`),
+		),
+	// set: (o, k: CssVarCamel, v) => (
+	// 	o.style.setProperty(`--${camelToKebab(k)}`, `${v}px`), true
+	// ),
+}) as any as Readonly<Record<CssVarCamel, number>>
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_tablet_or_desktop
 export const isMobile = navigator.userAgent.includes('Mobi')

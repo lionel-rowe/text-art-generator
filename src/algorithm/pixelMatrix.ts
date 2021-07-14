@@ -1,4 +1,5 @@
 import { AspectRatio, Rect } from '../types/types'
+import { createCanvas } from '../utils/canvas'
 
 export type Pixel = { val: number }
 export type PixelMatrix = Pixel[][]
@@ -56,10 +57,7 @@ export const getMutableImageLuminanceValues = ({
 
 	const rect: Rect = [0, 0, w, h]
 
-	const canvas = document.createElement('canvas')
-
-	canvas.width = w
-	canvas.height = h
+	const canvas = createCanvas(w, h)
 
 	const ctx = canvas.getContext('2d')!
 

@@ -9,9 +9,9 @@ import { getAlphabetScalingData } from './algorithm/charScaling'
 import {
 	getNormalizedCharDensities,
 	getRawCharDensities,
-	getCharSet,
 	RawCharDensityData,
 } from './algorithm/charDensity'
+import { getCharSet } from './algorithm/charSet'
 import {
 	getCharPixelMatrix,
 	CharPixelMatrix,

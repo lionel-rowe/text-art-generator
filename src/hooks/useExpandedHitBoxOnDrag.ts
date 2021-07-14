@@ -13,7 +13,7 @@ export const useExpandedHitBoxOnDrag = (
 		const revertHitBox = (e?: MouseEvent) => {
 			if (
 				!e || // called directly
-				!(e.buttons & 1) // primary mouse button not pressed
+				!(e.buttons & 1) // not dragging (`1` is left-click)
 			) {
 				ref.current?.classList.remove('max-hit-box')
 			}

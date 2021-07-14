@@ -1,5 +1,16 @@
 import { Channels } from './pixelMatrix'
 import { Rect } from '../types/types'
+import { CharSet } from './charSet'
+import { createCanvas } from '../utils/canvas'
+
+const CANVAS_SIZE = 70
+const FONT_SIZE = 50
+
+const BORDER = (CANVAS_SIZE - FONT_SIZE) / 2
+const LEFT = BORDER
+const BASELINE = CANVAS_SIZE - BORDER
+
+const RECT: Rect = [0, 0, CANVAS_SIZE, CANVAS_SIZE]
 
 export type CharVal = {
 	ch: string
@@ -16,40 +27,19 @@ type CharValsOptions = {
 	invert: boolean
 }
 
-export type CharSet = string & {
-	readonly CharSet: unique symbol
-}
-
-export const getCharSet = (alphabet: string) =>
-	[...new Set(alphabet)]
-		.filter((ch) => ch !== '\n')
-		.sort((a, b) => a.localeCompare(b))
-		.join('') as CharSet
-
 export const getRawCharDensity =
-	(ctx: CanvasRenderingContext2D) =>
+	(ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) =>
 	(ch: string): CharVal => {
-		const { canvas } = ctx
-
-		canvas.height = 70
-		canvas.width = 70
-
-		const { width, height } = canvas
-
-		const rect: Rect = [0, 0, width, height]
-
-		ctx.font = '48px monospace'
-
-		ctx.clearRect(...rect)
-
-		ctx.fillStyle = '#000'
-		ctx.fillText(ch, 10, 50)
+		ctx.clearRect(...RECT)
+		ctx.fillText(ch, LEFT, BASELINE)
 
 		const val = ctx
-			.getImageData(...rect)
+			.getImageData(...RECT)
 			.data.reduce(
-				(acc, cur, idx) =>
-					idx % Channels.Modulus === Channels.Alpha ? acc - cur : acc,
+				(total, val, idx) =>
+					idx % Channels.Modulus === Channels.Alpha
+						? total - val
+						: total,
 				0,
 			)
 
@@ -60,9 +50,12 @@ export const getRawCharDensity =
 	}
 
 export const getRawCharDensities = (charSet: CharSet): RawCharDensityData => {
-	const canvas = document.createElement('canvas')
+	const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE)
 
 	const ctx = canvas.getContext('2d')!
+
+	ctx.font = `${FONT_SIZE}px monospace`
+	ctx.fillStyle = '#000'
 
 	const charVals = [...charSet].map(getRawCharDensity(ctx))
 
@@ -85,7 +78,7 @@ export const getNormalizedCharDensities =
 	({ invert }: CharValsOptions) =>
 	({ charVals, min, max }: RawCharDensityData) => {
 		// minimum of 1, to prevent dividing by 0
-		const range = max - min || 1
+		const range = Math.max(max - min, 1)
 
 		return charVals
 			.map(({ ch, val }) => {
