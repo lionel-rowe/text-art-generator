@@ -6,7 +6,7 @@ export type CharVal = {
 	val: number
 }
 
-export type RawCharValData = {
+export type RawCharDensityData = {
 	charVals: CharVal[]
 	min: number
 	max: number
@@ -16,17 +16,17 @@ type CharValsOptions = {
 	invert: boolean
 }
 
-export type ViableCharSet = string & {
-	readonly viable: unique symbol
+export type CharSet = string & {
+	readonly CharSet: unique symbol
 }
 
-export const getViableCharSet = (alphabet: string) =>
+export const getCharSet = (alphabet: string) =>
 	[...new Set(alphabet)]
 		.filter((ch) => ch !== '\n')
 		.sort((a, b) => a.localeCompare(b))
-		.join('') as ViableCharSet
+		.join('') as CharSet
 
-export const getRawCharVal =
+export const getRawCharDensity =
 	(ctx: CanvasRenderingContext2D) =>
 	(ch: string): CharVal => {
 		const { canvas } = ctx
@@ -40,8 +40,7 @@ export const getRawCharVal =
 
 		ctx.font = '48px monospace'
 
-		ctx.fillStyle = '#fff'
-		ctx.fillRect(...rect)
+		ctx.clearRect(...rect)
 
 		ctx.fillStyle = '#000'
 		ctx.fillText(ch, 10, 50)
@@ -50,7 +49,7 @@ export const getRawCharVal =
 			.getImageData(...rect)
 			.data.reduce(
 				(acc, cur, idx) =>
-					idx % Channels.Modulus === Channels.Alpha ? acc : acc + cur,
+					idx % Channels.Modulus === Channels.Alpha ? acc - cur : acc,
 				0,
 			)
 
@@ -60,14 +59,12 @@ export const getRawCharVal =
 		}
 	}
 
-export const getRawCharVals = (
-	viableCharSet: ViableCharSet,
-): RawCharValData => {
+export const getRawCharDensities = (charSet: CharSet): RawCharDensityData => {
 	const canvas = document.createElement('canvas')
 
 	const ctx = canvas.getContext('2d')!
 
-	const charVals = [...viableCharSet].map(getRawCharVal(ctx))
+	const charVals = [...charSet].map(getRawCharDensity(ctx))
 
 	let max = -Infinity
 	let min = Infinity
@@ -84,9 +81,9 @@ export const getRawCharVals = (
 	}
 }
 
-export const getCharVals =
+export const getNormalizedCharDensities =
 	({ invert }: CharValsOptions) =>
-	({ charVals, min, max }: RawCharValData) => {
+	({ charVals, min, max }: RawCharDensityData) => {
 		// minimum of 1, to prevent dividing by 0
 		const range = max - min || 1
 

@@ -1,4 +1,4 @@
-import { ViableCharSet } from './charVals'
+import { CharSet } from './charDensity'
 import { appendInvisible } from '../ui/browser'
 import { AspectRatio } from '../types/types'
 
@@ -33,12 +33,12 @@ const _getCharScalingData =
 		}
 	}
 
-export function getAlphabetScalingData(viableCharSet: ViableCharSet): {
+export function getAlphabetScalingData(charSet: CharSet): {
 	width: number
 	height: number
 	aspectRatio: AspectRatio
 } {
-	for (const ch of viableCharSet) {
+	for (const ch of charSet) {
 		if (!SEPARATOR_REGEX.test(ch)) {
 			return _getCharScalingData(REPEAT_COUNT)(ch)
 		}
@@ -47,10 +47,8 @@ export function getAlphabetScalingData(viableCharSet: ViableCharSet): {
 	return _getCharScalingData(REPEAT_COUNT)(' ')
 }
 
-export const getAlphabetDimensionConsistency = (
-	viableCharSet: ViableCharSet,
-) => {
-	return [...viableCharSet]
+export const getAlphabetDimensionConsistency = (charSet: CharSet) => {
+	return [...charSet]
 		.map((ch) => ({ ch, ..._getCharScalingData(1)(ch) }))
 		.reduce((obj, { ch, width, height }) => {
 			const dims = [width, height].join(',')
@@ -64,6 +62,6 @@ export const getAlphabetDimensionConsistency = (
 // // for debug usage
 // logPerf('alphabet consistency', () => {
 //     for (const [k, v] of Object.entries(presets)) {
-//         console.info(k, getAlphabetDimensionConsistency(getViableCharSet( v.content)))
+//         console.info(k, getAlphabetDimensionConsistency(getCharSet( v.content)))
 //     }
 // })()

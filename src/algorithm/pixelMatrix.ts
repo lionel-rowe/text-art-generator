@@ -79,11 +79,11 @@ export const getMutableImageLuminanceValues = ({
 	let min = Infinity
 
 	for (const [idx, d] of pixelData.entries()) {
-		const subPixel = (idx % Channels.Modulus) as Channel
+		const channel = (idx % Channels.Modulus) as Channel
 
-		if (subPixel !== Channels.Alpha) {
+		if (channel !== Channels.Alpha) {
 			// rgb channel
-			curPix += d * perceivedLuminance[subPixel]
+			curPix += d * perceivedLuminance[channel]
 		} else {
 			// append pixel and reset during alpha channel
 

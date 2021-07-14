@@ -7,11 +7,11 @@ import {
 } from 'react'
 import { getAlphabetScalingData } from './algorithm/charScaling'
 import {
-	getCharVals,
-	getRawCharVals,
-	getViableCharSet,
-	RawCharValData,
-} from './algorithm/charVals'
+	getNormalizedCharDensities,
+	getRawCharDensities,
+	getCharSet,
+	RawCharDensityData,
+} from './algorithm/charDensity'
 import {
 	getCharPixelMatrix,
 	CharPixelMatrix,
@@ -79,18 +79,18 @@ export const App = () => {
 		idb.set('src', src)
 	}, [status, src])
 
-	const viableCharSet = useMemo(() => getViableCharSet(alphabet), [alphabet])
+	const charSet = useMemo(() => getCharSet(alphabet), [alphabet])
 
 	const aspectRatio = useRefGetter<AspectRatio>(
 		() =>
 			status === 'loaded'
-				? getAlphabetScalingData(viableCharSet).aspectRatio
+				? getAlphabetScalingData(charSet).aspectRatio
 				: [1, 1],
-		[status, viableCharSet],
+		[status, charSet],
 	)
 
 	const [rawCharValData, setRawCharValData] =
-		useResponsiveThrottle<RawCharValData>({
+		useResponsiveThrottle<RawCharDensityData>({
 			charVals: [],
 			min: 0,
 			max: 0,
@@ -99,11 +99,11 @@ export const App = () => {
 	useEffect(() => {
 		if (status !== 'loaded') return
 
-		setRawCharValData(() => getRawCharVals(viableCharSet))
-	}, [status, viableCharSet, setRawCharValData])
+		setRawCharValData(() => getRawCharDensities(charSet))
+	}, [status, charSet, setRawCharValData])
 
 	const charVals = useMemo(
-		() => getCharVals({ invert })(rawCharValData),
+		() => getNormalizedCharDensities({ invert })(rawCharValData),
 		[invert, rawCharValData],
 	)
 
