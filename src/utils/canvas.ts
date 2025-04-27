@@ -4,4 +4,4 @@ export const createCanvas = (width: number, height: number) =>
 		: (Object.assign(document.createElement('canvas'), {
 				width,
 				height,
-		  }) as HTMLCanvasElement)
+			}) as HTMLCanvasElement)

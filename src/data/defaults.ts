@@ -8,7 +8,7 @@ export const DEFAULTS = {
 	fileName,
 	src,
 	alphabet,
-	resolutionX: 200,
+	resolutionX: 100,
 	invert: false,
 	brightness: 50,
 	contrast: 50,

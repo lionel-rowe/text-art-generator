@@ -59,7 +59,9 @@ export const getMutableImageLuminanceValues = ({
 
 	const canvas = createCanvas(w, h)
 
-	const ctx = canvas.getContext('2d')!
+	const ctx = canvas.getContext('2d') as
+		| OffscreenCanvasRenderingContext2D
+		| CanvasRenderingContext2D
 
 	ctx.fillStyle = '#fff'
 

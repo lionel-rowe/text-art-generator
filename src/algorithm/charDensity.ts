@@ -2,6 +2,7 @@ import { Channels } from './pixelMatrix'
 import { Rect } from '../types/types'
 import { CharSet } from './charSet'
 import { createCanvas } from '../utils/canvas'
+import { memoize, LruCache } from '../utils/cache'
 
 const CANVAS_SIZE = 70
 const FONT_SIZE = 50
@@ -49,10 +50,15 @@ export const getRawCharDensity =
 		}
 	}
 
-export const getRawCharDensities = (charSet: CharSet): RawCharDensityData => {
+export const getRawCharDensities = memoize(_getRawCharDensities, {
+	cache: new LruCache(100),
+})
+function _getRawCharDensities(charSet: CharSet): RawCharDensityData {
 	const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE)
 
-	const ctx = canvas.getContext('2d')!
+	const ctx = canvas.getContext('2d') as
+		| OffscreenCanvasRenderingContext2D
+		| CanvasRenderingContext2D
 
 	ctx.font = `${FONT_SIZE}px monospace`
 	ctx.fillStyle = '#000'

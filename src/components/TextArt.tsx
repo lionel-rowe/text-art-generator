@@ -11,7 +11,7 @@ import { pixelValues, appendInvisible } from '../ui/browser'
 import { Point } from '../types/types'
 import { getScreenDimensions, getScreenWidth, isMobile } from '../ui/browser'
 
-const MAX_SCALE = 1
+const MAX_SCALE = 0.6
 
 enum ZoomLevels {
 	Small,
@@ -62,7 +62,6 @@ export const TextArt: FC<{
 	const updateScale = useCallback(() => {
 		if (zoomLevel === ZoomLevels.Large) {
 			setScale(1)
-
 			return
 		}
 
@@ -82,29 +81,24 @@ export const TextArt: FC<{
 	useLayoutEffect(() => {
 		updateScale()
 
-		window.addEventListener('resize', updateScale)
+		const ac = new AbortController()
+		window.addEventListener('resize', updateScale, { signal: ac.signal })
 
-		return () => window.removeEventListener('resize', updateScale)
+		return () => ac.abort()
 	}, [updateScale])
 
 	useLayoutEffect(() => {
-		const undrag = () => setDrag(false)
-		const drag = () => setDrag(true)
-		const minimize = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') setZoomLevel(ZoomLevels.Small)
-		}
+		const ac = new AbortController()
+		const opts = { signal: ac.signal }
+		document.addEventListener('mousedown', () => setDrag(false), opts)
+		document.addEventListener('mousemove', () => setDrag(true), opts)
+		window.addEventListener(
+			'keydown',
+			(e) => e.key === 'Escape' && setZoomLevel(ZoomLevels.Small),
+			opts,
+		)
 
-		document.addEventListener('mousedown', undrag)
-		document.addEventListener('mousemove', drag)
-
-		window.addEventListener('keydown', minimize)
-
-		return () => {
-			document.removeEventListener('mousedown', undrag)
-			document.removeEventListener('mousemove', drag)
-
-			window.removeEventListener('keydown', minimize)
-		}
+		return () => ac.abort()
 	}, [])
 
 	useLayoutEffect(() => {
@@ -179,9 +173,9 @@ export const TextArt: FC<{
 							? 0
 							: `${
 									-(naturalHeight - scale * naturalHeight) / 2
-							  }px ${
+								}px ${
 									-(naturalWidth - scale * naturalWidth) / 2
-							  }px `,
+								}px `,
 				}}
 			>
 				{content}

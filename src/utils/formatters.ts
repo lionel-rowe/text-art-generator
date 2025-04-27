@@ -2,16 +2,16 @@
 type KebabToPascal<S extends string> = string extends S
 	? string
 	: S extends `${infer T}-${infer U}`
-	? `${Capitalize<`${Lowercase<T>}`>}${KebabToPascal<U>}`
-	: S extends `${infer T}`
-	? `${Capitalize<`${Lowercase<T>}`>}`
-	: never
+		? `${Capitalize<`${Lowercase<T>}`>}${KebabToPascal<U>}`
+		: S extends `${infer T}`
+			? `${Capitalize<`${Lowercase<T>}`>}`
+			: never
 
 export type KebabToCamel<S extends string> = S extends `${infer T}-${infer U}`
 	? `${Lowercase<T>}${KebabToPascal<U>}`
 	: S extends `${infer T}`
-	? `${Lowercase<T>}`
-	: KebabToPascal<S>
+		? `${Lowercase<T>}`
+		: KebabToPascal<S>
 
 export const camelToKebab = (camel: string) =>
 	camel.replace(/[a-z][A-Z]/g, (m) => [...m].join('-').toLowerCase())
